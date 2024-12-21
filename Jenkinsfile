@@ -3,7 +3,7 @@ pipeline{
     stages{
        stage('Git Checkout Stage'){
             steps{
-                git branch: 'main', url: 'https://github.com/sudheer76R/sonarqube-example.git'
+                git branch: 'main', url: 'https://github.com/guruvenkatakrishna/sonarqube-example.git'
             }
          }        
        stage('Build Stage'){

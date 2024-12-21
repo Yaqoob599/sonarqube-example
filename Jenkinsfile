@@ -20,5 +20,28 @@ pipeline{
                     -Dsonar.login=sqp_d2ab8fe9634ae3654018b893e8e3e7222eaf8409'
             }
         }
+        stage('Build Artifact') {
+            steps {
+                sh 'mvn package'
+            }
+        }
+        stage('Docker Build') {
+            steps {
+                sh 'docker build -t app:latest .'
+            }
+        }
+        stage('Push to Docker Hub') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh 'docker login -u $USERNAME -p $PASSWORD'
+                    sh 'docker push app:latest'
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'docker run -d -p 8080:8080 app:latest'
+            }
+        }
     }
 }

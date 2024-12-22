@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:latest1
 
 
 RUN apt-get update && apt-get install -y \

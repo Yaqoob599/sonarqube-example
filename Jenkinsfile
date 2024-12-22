@@ -1,7 +1,6 @@
 pipeline{
     agent any
     environment {
-        DOCKER_HUB_CREDENTIALS = credentials('docker-cred') // Replace with your credentials ID
         DOCKER_HUB_REPO = "venkatchalla841/myapplications" 
     }
     stages{
@@ -31,11 +30,14 @@ pipeline{
         }
         stage('Login to Docker Hub') {
             steps {
-                script {
-                    sh "echo ${DOCKER_HUB_CREDENTIALS_PSW} | docker login --username ${DOCKER_HUB_CREDENTIALS_USR} --password-stdin"
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials-id', 
+                                                  usernameVariable: 'DOCKER_HUB_USERNAME', 
+                                                  passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
+                    sh """
+                    echo $DOCKER_HUB_PASSWORD | docker login --username $DOCKER_HUB_USERNAME --password-stdin
+                    """
                 }
             }
-        }
         stage('Docker Build') {
             steps {
                 sh 'docker build -t ${DOCKER_HUB_REPO}:latest .'

@@ -3,6 +3,7 @@ pipeline{
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('docker-cred') // Replace with your credentials ID
         DOCKER_HUB_REPO = "venkatchalla841/myapplications" 
+    }
     stages{
        stage('Git Checkout Stage'){
             steps{
@@ -45,7 +46,6 @@ pipeline{
                 sh """ docker push ${DOCKER_HUB_REPO}:latest """
                 
                 }
-            }
         }
         stage('Deploy') {
             steps {

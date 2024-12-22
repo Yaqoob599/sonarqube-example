@@ -41,18 +41,18 @@ pipeline{
         }
         stage('Docker Build') {
             steps {
-                sh 'docker build -t ${DOCKER_HUB_REPO}:latest .'
+                sh 'docker build -t ${DOCKER_HUB_REPO}:latest1 .'
             }
         }
         stage('Push to Docker Hub') {
             steps {
-                sh """ docker push ${DOCKER_HUB_REPO}:latest """
+                sh """ docker push ${DOCKER_HUB_REPO}:latest1 """
                 
                 }
         }
         stage('Deploy') {
             steps {
-                sh 'docker run -d -p 8080:8080 ${DOCKER_HUB_REPO}:latest'
+                sh 'docker run -d -p 8080:8080 ${DOCKER_HUB_REPO}:latest1'
             }
         }
     }

@@ -1,5 +1,8 @@
 pipeline{
     agent any
+    environment {
+        DOCKER_HUB_CREDENTIALS = credentials('docker-cred') // Replace with your credentials ID
+        DOCKER_HUB_REPO = "venkatchalla841/myapplications" 
     stages{
        stage('Git Checkout Stage'){
             steps{
@@ -25,22 +28,28 @@ pipeline{
                 sh 'mvn package'
             }
         }
+        stage('Login to Docker Hub') {
+            steps {
+                script {
+                    sh "echo ${DOCKER_HUB_CREDENTIALS_PSW} | docker login --username ${DOCKER_HUB_CREDENTIALS_USR} --password-stdin"
+                }
+            }
+        }
         stage('Docker Build') {
             steps {
-                sh 'docker build -t app:latest .'
+                sh 'docker build -t ${DOCKER_HUB_REPO}:latest .'
             }
         }
         stage('Push to Docker Hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
-                    sh 'docker push app:latest'
+                sh """ docker push ${DOCKER_HUB_REPO}:latest """
+                
                 }
             }
         }
         stage('Deploy') {
             steps {
-                sh 'docker run -d -p 8080:8080 app:latest'
+                sh 'docker run -d -p 8080:8080 ${DOCKER_HUB_REPO}:latest'
             }
         }
     }

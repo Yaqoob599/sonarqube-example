@@ -17,12 +17,12 @@ pipeline {
         }
         stage('Sonar Analysis') {
             steps {
-                withCredentials([string(credentialsId: 'sonarqube-token-id', variable: 'SONAR_TOKEN')]) {
+               
                     sh 'mvn clean verify sonar:sonar \
-                        -Dsonar.projectKey=venk \
-                        -Dsonar.host.url=http://34.229.89.9:9000 \
-                        -Dsonar.login=$SONAR_TOKEN'
-                }
+                          -Dsonar.projectKey=ven \
+                          -Dsonar.host.url=http://34.229.89.9:9000 \
+                          -Dsonar.login=sqp_3a8695d232d1b84f799638fe058ba023a8da359d'
+        
             }
         }
         stage('Build Artifact') {

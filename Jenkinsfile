@@ -18,9 +18,9 @@ pipeline{
         stage ('sonar analysis'){
             steps{
                 sh 'mvn clean verify sonar:sonar \
-                    -Dsonar.projectKey=sonarcheck \
-                    -Dsonar.host.url=http://54.234.49.251:9000 \
-                    -Dsonar.login=sqp_bbc2166473d82d28b5aefc67a6488da5aa289fff'
+                      -Dsonar.projectKey=completedeploy \
+                      -Dsonar.host.url=http://52.90.96.16:9000 \
+                      -Dsonar.login=sqp_8286fadd7915e1a85182c8b4b1c6d3c602f49b8b'
             }
         }
         stage('Build Artifact') {

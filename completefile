@@ -1,0 +1,74 @@
+pipeline {
+    agent any
+    environment {
+        DOCKER_HUB_REPO = "venkatchalla841/myapplications"
+        DOCKER_IMAGE_TAG = "${BUILD_NUMBER}" 
+    }
+    stages {
+        stage('Git Checkout Stage') {
+            steps {
+                git branch: 'main', url: 'https://github.com/guruvenkatakrishna/sonarqube-example.git'
+            }
+        }
+        stage('Build Stage') {
+            steps {
+                sh 'mvn clean compile'
+            }
+        }
+        stage('Sonar Analysis') {
+            steps {
+                withCredentials([string(credentialsId: 'sonarqube-token-id', variable: 'SONAR_TOKEN')]) {
+                    sh 'mvn clean verify sonar:sonar \
+                        -Dsonar.projectKey=venk \
+                        -Dsonar.host.url=http://34.229.89.9:9000 \
+                        -Dsonar.login=$SONAR_TOKEN'
+                }
+            }
+        }
+        stage('Build Artifact') {
+            steps {
+                sh 'mvn package'
+            }
+        }
+        stage('Login to Docker Hub') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker-cred', 
+                                                  usernameVariable: 'DOCKER_HUB_USERNAME', 
+                                                  passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
+                    sh """
+                    echo $DOCKER_HUB_PASSWORD | docker login --username $DOCKER_HUB_USERNAME --password-stdin
+                    """
+                }
+            }
+        }
+        stage('Docker Build') {
+            steps {
+                sh 'docker build -t ${DOCKER_HUB_REPO}:${DOCKER_IMAGE_TAG} .'
+            }
+        }
+        stage('Push to Docker Hub') {
+            steps {
+                sh 'docker push ${DOCKER_HUB_REPO}:${DOCKER_IMAGE_TAG}'
+            }
+        }
+        stage('Deploy to Kubernetes') {
+            steps {
+                withKubeConfig([credentialsId: 'kubeconfig-secret-id']) {
+                    sh 'kubectl apply -f deployment.yaml'
+                    sh 'kubectl apply -f service.yaml'
+                }
+            }
+        }
+    }
+    post {
+        always {
+            echo 'Pipeline execution completed.'
+        }
+        success {
+            echo 'Pipeline executed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed. Check logs for details.'
+        }
+    }
+}

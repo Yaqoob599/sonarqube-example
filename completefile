@@ -20,8 +20,8 @@ pipeline {
                
                     sh 'mvn clean verify sonar:sonar \
                           -Dsonar.projectKey=completedeploy \
-                          -Dsonar.host.url=http://44.222.201.14:9000 \
-                          -Dsonar.login=sqp_7f55b26c3e9df78f396bafe1f6f8bfe1be4e1705'
+                          -Dsonar.host.url=http://52.87.217.191:9000 \
+                          -Dsonar.login=sqp_29d3b18ff645188cecabc270de8184b48db69d5e'
         
             }
         }

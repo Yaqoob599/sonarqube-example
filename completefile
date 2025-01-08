@@ -10,9 +10,9 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/guruvenkatakrishna/sonarqube-example.git'
             }
         }
-        stage('Build Stage') {
+        stage('test Stage') {
             steps {
-                sh 'mvn clean compile'
+                sh 'mvn clean test'
             }
         }
         stage('Sonar Analysis') {

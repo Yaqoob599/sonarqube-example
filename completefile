@@ -19,9 +19,9 @@ pipeline {
             steps {
                
                     sh 'mvn clean verify sonar:sonar \
-                          -Dsonar.projectKey=ven \
-                          -Dsonar.host.url=http://34.229.89.9:9000 \
-                          -Dsonar.login=sqp_3a8695d232d1b84f799638fe058ba023a8da359d'
+                          -Dsonar.projectKey=completedeploy \
+                          -Dsonar.host.url=http://44.222.201.14:9000 \
+                          -Dsonar.login=sqp_7f55b26c3e9df78f396bafe1f6f8bfe1be4e1705'
         
             }
         }

@@ -20,7 +20,7 @@ pipeline{
                 sh 'mvn clean verify sonar:sonar \
                       -Dsonar.projectKey=cicd-deploy \
                       -Dsonar.host.url=http://15.206.94.130:9000 \
-                      -Dsonar.login=squ_52adeabc24df0c7bff0d7faa18d3bbd2527f5c66
+                      -Dsonar.login='squ_52adeabc24df0c7bff0d7faa18d3bbd2527f5c66'
             }
         }
         stage('Build Artifact') {
